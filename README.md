@@ -1,33 +1,50 @@
-# SplitBase
+# SplitBase (UUPS Upgradeable)
 
-A minimal and transparent smart contract for **revenue sharing** on the Base L2 network.
+A minimal, upgradeable revenue splitter for the **Base** network (L2, Coinbase).  
+Recipients withdraw their share on demand; shares are set in permille (sum = 1000).
+
+---
 
 ## Overview
-SplitBase lets you distribute incoming funds among multiple recipients using predefined shares (per-mille system, total = 1000).
-It’s simple, gas-efficient, and deployable on Base testnet (Sepolia) or mainnet.
+- **UUPS proxy pattern** (ERC1967 proxy + upgradeable implementation)
+- **Ownable**: upgrades are protected by `onlyOwner` (recommend Gnosis Safe in production)
+- Built with **Foundry**, includes CI and GitHub Actions deploy/verify workflows
 
 ## Features
-- Built with **Foundry**
-- Includes unit tests (`forge test`)
-- Ready for **CI** (GitHub Actions)
-- Simple logic — anyone can send funds, recipients withdraw their portion
+- Upgradeable contract: `src/SplitBaseUpgradeable.sol`
+- Scripts: `script/DeployUUPS.s.sol`, `script/UpgradeUUPS.s.sol`
+- CI: build on every push
+- **1-click deploy & verify** from GitHub Actions (no local setup required)
 
-## Deploy (Base Sepolia)
-Example `.env` setup:
-```
-PRIVATE_KEY=0x...
-BASE_SEPOLIA_RPC_URL=https://sepolia.base.org
-RECIPIENTS=0x1111...,0x2222...
-SHARES=600,400
-```
+---
 
-Deploy command:
-```
-forge script script/Deploy.s.sol:Deploy --rpc-url base_sepolia --private-key $PRIVATE_KEY --broadcast
-```
+## Deployed Contracts
 
-## Security
-This contract has no external audit. Use at your own risk.
+### Base Mainnet
+- Implementation: `0x9fad7fe258a4a14b043fcd8a9febc3fd071aa529`
+- Proxy (use this address): `0xd59d94632381bb206667d1cc594db412193e27b1`
+- Explorer: https://basescan.org/address/0xd59d94632381bb206667d1cc594db412193e27b1
 
-## License
-MIT License © 2025
+### Base Sepolia (testnet)
+- Implementation: `0x9fad7fe258a4a14b043fcd8a9febc3fd071aa529`
+- Proxy (use this address): `0xd59d94632381bb206667d1cc594db412193e27b1`
+- Explorer: https://sepolia.basescan.org/address/0xd59d94632381bb206667d1cc594db412193e27b1
+
+---
+
+## How it works
+
+Anyone can send ETH to the proxy (the contract receives funds).  
+Recipients withdraw using `release(<address>)`, which transfers their accrued share.
+
+- Shares are in **permille** (e.g., `600,400` = 60%/40%).  
+- The sum of all `SHARES` must be exactly **1000**.
+
+##Security Notes
+
+No third-party audit. Use at your own risk.
+For production, set the proxy owner to a Gnosis Safe (multisig).
+Preserve storage layout for upgrades.
+
+##License
+MIT © 2025
