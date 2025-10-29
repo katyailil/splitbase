@@ -5,19 +5,6 @@ Recipients withdraw their share on demand; shares are set in permille (sum = 100
 
 ---
 
-## Overview
-- **UUPS proxy pattern** (ERC1967 proxy + upgradeable implementation)
-- **Ownable**: upgrades are protected by `onlyOwner` (recommend Gnosis Safe in production)
-- Built with **Foundry**, includes CI and GitHub Actions deploy/verify workflows
-
-## Features
-- Upgradeable contract: `src/SplitBaseUpgradeable.sol`
-- Scripts: `script/DeployUUPS.s.sol`, `script/UpgradeUUPS.s.sol`
-- CI: build on every push
-- **1-click deploy & verify** from GitHub Actions (no local setup required)
-
----
-
 ## Deployed Contracts
 
 ### Base Mainnet
@@ -40,7 +27,7 @@ Recipients withdraw using `release(<address>)`, which transfers their accrued sh
 - Shares are in **permille** (e.g., `600,400` = 60%/40%).  
 - The sum of all `SHARES` must be exactly **1000**.
 
-##Security Notes
+## Security Notes
 
 No third-party audit. Use at your own risk.
 For production, set the proxy owner to a Gnosis Safe (multisig).
