@@ -1,0 +1,19 @@
+name: CI
+on:
+  push:
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+      - name: Install OZ deps
+        run: |
+          forge install OpenZeppelin/openzeppelin-contracts-upgradeable@v5.0.2 --no-commit
+          forge install OpenZeppelin/openzeppelin-contracts@v5.0.2 --no-commit
+      - name: Build
+        run: forge build -vv
