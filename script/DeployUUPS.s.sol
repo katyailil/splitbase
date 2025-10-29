@@ -31,8 +31,7 @@ contract DeployUUPS is Script {
 
         vm.stopBroadcast();
 
-        console2.log("Implementation:", address(impl));
-        console2.log("Proxy:", address(proxy));
+        
     }
 
     function _parseAddresses(string memory csv) internal pure returns (address[] memory) {
